@@ -47,6 +47,9 @@ class UserFactory extends Factory
             'email_verified_at' => $this->faker->optional(0.7)->dateTimeBetween('-30 days'),
             'password' => Hash::make('password'),
 
+            /* Profile */
+            'avatar' => null,
+
             /* Role & Status */
             'role' => $this->faker->randomElement(UserRole::values()),
             'status' => $this->faker->randomElement([

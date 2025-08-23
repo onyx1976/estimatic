@@ -19,6 +19,7 @@ use Illuminate\Notifications\Notifiable;
  * - Rich set of fields for personal info, contact, localization, preferences, and tracking.
  * - Helper methods for common role/status checks to keep controllers/services clean.
  * - Query scopes for common queries (active users, users by role).
+ * @method static create(array $array)
  */
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -35,6 +36,8 @@ class User extends Authenticatable implements MustVerifyEmail
         'first_name', 'last_name', 'date_of_birth', 'gender',
         /* Contact & Auth */
         'email', 'phone', 'password',
+        /* Profile */
+        'avatar',
         /* Role & Status */
         'role', 'status',
         /* Localization & Preferences */

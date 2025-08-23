@@ -47,6 +47,9 @@ return new class extends Migration {
             $table->string('password');
             $table->rememberToken();
 
+            /* Profile */
+            $table->string('avatar', 255)->nullable();
+
             /* Localization & Preferences */
             $table->string('language', 10)->default('pl');
             $table->string('locale', 20)->default('pl_PL');
