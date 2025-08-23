@@ -20,6 +20,7 @@ use Illuminate\Notifications\Notifiable;
  * - Helper methods for common role/status checks to keep controllers/services clean.
  * - Query scopes for common queries (active users, users by role).
  * @method static create(array $array)
+ * @method static find(mixed $id)
  */
 class User extends Authenticatable implements MustVerifyEmail
 {
