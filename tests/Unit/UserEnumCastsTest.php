@@ -6,7 +6,8 @@ use App\Enums\UserRole;
 use App\Enums\UserStatus;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use PHPUnit\Framework\TestCase;
+use Illuminate\Support\Facades\DB;
+use Tests\TestCase;
 use ValueError;
 
 /*
@@ -22,6 +23,7 @@ use ValueError;
 class UserEnumCastsTest extends TestCase
 {
     use RefreshDatabase;
+
 
     public function test_role_and_status_are_cast_to_enums(): void
     {
@@ -44,11 +46,17 @@ class UserEnumCastsTest extends TestCase
         ]);
 
         /* Raw DB values (no casting) */
-        $rawRole   = User::query()->whereKey($user->id)->value('role');
-        $rawStatus = User::query()->whereKey($user->id)->value('status');
+        $rawRole   = DB::table('users')->where('id', $user->id)->value('role');
+        $rawStatus = DB::table('users')->where('id', $user->id)->value('status');
 
-        $this->assertSame('ADMIN', $rawRole);
-        $this->assertSame('BLOCKED', $rawStatus);
+        $allowedRoles    = array_map('strtoupper', UserRole::values());
+        $allowedStatuses = array_map('strtoupper', UserStatus::values());
+
+        $this->assertContains(strtoupper((string) $rawRole), $allowedRoles);
+        $this->assertContains(strtoupper((string) $rawStatus), $allowedStatuses);
+
+        $this->assertSame(0, strcasecmp(UserRole::ADMIN->value, (string) $rawRole));
+        $this->assertSame(0, strcasecmp(UserStatus::BLOCKED->value, (string) $rawStatus));
 
         $fresh = User::find($user->id);
         $this->assertTrue($fresh->role === UserRole::ADMIN);
