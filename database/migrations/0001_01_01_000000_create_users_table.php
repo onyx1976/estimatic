@@ -30,7 +30,7 @@ return new class extends Migration {
                 ->index('idx_users_role');
 
             $table->enum('status', array_column(UserStatus::cases(), 'value'))
-                ->default(UserStatus::INCOMPLETE->value)
+                ->default(UserStatus::ACTIVE->value)
                 ->index('idx_users_status');
 
             /* Personal Information */
