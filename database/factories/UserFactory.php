@@ -7,7 +7,6 @@ use App\Enums\UserStatus;
 use App\Models\User;
 use App\Traits\HasPolishPhone;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Hash;
 
 /**
@@ -37,10 +36,12 @@ class UserFactory extends Factory
 
         return [
             /* Personal */
-            'first_name' => Arr::random($firstNames),
-            'last_name' => Arr::random($lastNames),
-            'date_of_birth' => $this->faker->optional()->date(),
-            'gender' => Arr::random(['male', 'female', 'other', 'prefer_not_to_say']),
+            'first_name' => $this->faker->randomElement($firstNames),
+            'last_name' => $this->faker->randomElement($lastNames),
+            'date_of_birth' => $this->faker->optional()
+                ->dateTimeBetween('-70 years', '-18 years')
+                ->format('Y-m-d'),
+            'gender' => $this->faker->randomElement(['male', 'female', 'other', 'prefer_not_to_say']),
 
             /* Contact & Auth */
             'email' => $this->faker->unique()->safeEmail(),
@@ -52,8 +53,8 @@ class UserFactory extends Factory
             'avatar' => null,
 
             /* Role & Status */
-            'role' => Arr::random(UserRole::values()),
-            'status' => Arr::random([
+            'role' => $this->faker->randomElement(UserRole::values()),
+            'status' => $this->faker->randomElement([
                 UserStatus::ACTIVE->value,
                 UserStatus::INACTIVE->value,
                 UserStatus::BLOCKED->value,
