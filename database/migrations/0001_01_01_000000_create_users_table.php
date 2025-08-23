@@ -74,9 +74,6 @@ return new class extends Migration {
             $table->softDeletes();
             $table->timestamps();
 
-            /* Full‑text for search (requires MySQL 5.7+/InnoDB) */
-            $table->fullText(['first_name', 'last_name', 'email'], 'ft_users_name_email');
-
             /* Helpful compound indexes */
             $table->index(['status', 'role'], 'idx_users_status_role');
         });
