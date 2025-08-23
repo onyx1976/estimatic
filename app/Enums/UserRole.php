@@ -2,8 +2,16 @@
 
 namespace App\Enums;
 
-/**
- * Enum representing user roles.
+/*
+ |----------------------------------------------------------------------
+ | UserRole enum
+ |----------------------------------------------------------------------
+ | Source of truth for user roles across the application.
+ | Keep the string values stable — they are persisted in the DB (ENUM).
+ | Used by:
+ | - users table migration (array_column(UserRole::cases(), 'value'))
+ | - authorization checks and policies
+ | - form options / filters
  */
 enum UserRole: string
 {
