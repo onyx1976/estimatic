@@ -1,11 +1,22 @@
 * text=auto eol=lf
 
-*.blade.php diff=html
+# Better diffs for PHP/Blade
+*.php diff=php
+*.blade.php linguist-language=PHP
+
+# Reduce noise in diffs for non-code files
+composer.lock -diff
+package-lock.json -diff
+pnpm-lock.yaml -diff
+yarn.lock -diff
+*.min.* -diff
+*.map -diff
+public/build/** -diff
 *.css diff=css
 *.html diff=html
 *.md diff=markdown
-*.php diff=php
 
+# Ignore files/folders in archives
 /.github export-ignore
+/tests export-ignore
 CHANGELOG.md export-ignore
-.styleci.yml export-ignore
