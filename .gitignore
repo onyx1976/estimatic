@@ -3,6 +3,10 @@
 .env
 .env.backup
 .env.production
+.env.testing
+.git
+.gitattributes
+.gitignore
 .phpactor.json
 .phpunit.result.cache
 /.fleet

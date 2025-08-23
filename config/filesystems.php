@@ -30,6 +30,14 @@ return [
 
     'disks' => [
 
+        'private' => [
+            /* Private local disk (no public URL, no /storage symlink) */
+            'driver' => 'local',
+            'root' => storage_path('app/private'),
+            'visibility' => 'private',
+            'throw' => false,
+        ],
+
         'local' => [
             'driver' => 'local',
             'root' => storage_path('app/private'),

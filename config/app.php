@@ -14,7 +14,9 @@ return [
     */
 
     'name' => env('APP_NAME', 'Laravel'),
-
+    'author' => env('APP_AUTHOR', 'OnxCode76'),
+    'consumer' => env('APP_CONSUMER', 'OnxCode76'),
+    'version' => env('APP_VERSION', '1.0.0'),
     /*
     |--------------------------------------------------------------------------
     | Application Environment
