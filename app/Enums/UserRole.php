@@ -13,14 +13,33 @@ namespace App\Enums;
  | - authorization checks and policies
  | - form options / filters
  */
+
 enum UserRole: string
 {
     case OWNER = 'owner';
     case ADMIN = 'admin';
     case COMPANY = 'company';
 
+
+    /**
+     * Get an array of all user role values.
+     *
+     * @return array
+     */
+    public static function values(): array
+    {
+        /* Keep order explicit to avoid accidental reordering. */
+        return [
+            self::OWNER->value,
+            self::ADMIN->value,
+            self::COMPANY->value,
+        ];
+    }
+
     /**
      * Get the label for the user role.
+     *
+     * @return string
      */
     public function label(): string
     {
@@ -32,7 +51,9 @@ enum UserRole: string
     }
 
     /**
-     * Get an array of privileged roles.
+     * Get an array of privileged roles (owner and admin).
+     *
+     * @return array
      */
     public static function privileged(): array
     {
