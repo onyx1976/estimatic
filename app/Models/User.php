@@ -6,6 +6,7 @@ use App\Enums\UserRole;
 use App\Enums\UserStatus;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -92,10 +93,10 @@ class User extends Authenticatable implements MustVerifyEmail
     /**
      * Relationships.
      */
-    public function company(): null
+    public function company(): HasOne
     {
-        /* todo: When Company model exists: return $this->hasOne(Company::class); */
-        return null;
+        /* Related company profile (1:1); role COMPANY enforced at application/service level */
+        return $this->hasOne(Company::class);
     }
 
     /**
