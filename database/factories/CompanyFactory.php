@@ -52,7 +52,12 @@ class CompanyFactory extends Factory
             'apartment_no' => $this->faker->optional(0.3)->numberBetween(1, 199),
             'city' => $this->faker->optional()->city(),
             'zipcode' => $this->faker->optional()->numerify('##-###'),
-            'voivodeship' => $this->faker->optional()->word(), /* can refine later */
+            'voivodeship' => $this->faker->optional(0.8)->randomElement([
+                'dolnośląskie', 'kujawsko-pomorskie', 'lubelskie', 'lubuskie',
+                'łódzkie', 'małopolskie', 'mazowieckie', 'opolskie',
+                'podkarpackie', 'podlaskie', 'pomorskie', 'śląskie',
+                'świętokrzyskie', 'warmińsko-mazurskie', 'wielkopolskie', 'zachodniopomorskie'
+            ]),
             'country_code' => 'PL',
 
             /* Web & Media */
@@ -103,6 +108,26 @@ class CompanyFactory extends Factory
     public function suspended(): self
     {
         return $this->state(fn() => ['status' => CompanyStatus::SUSPENDED->value]);
+    }
+
+    /**
+     * Add Polish Data to Seeder.
+     *
+     * @return $this
+     */
+    public function withPolishData(): static
+    {
+        return $this->state(fn(array $attributes) => [
+            'nip' => $this->faker->numerify('##########'),
+            'regon' => $this->faker->numerify('#############'),
+            'voivodeship' => $this->faker->randomElement([
+                'dolnośląskie', 'kujawsko-pomorskie', 'lubelskie', 'lubuskie',
+                'łódzkie', 'małopolskie', 'mazowieckie', 'opolskie',
+                'podkarpackie', 'podlaskie', 'pomorskie', 'śląskie',
+                'świętokrzyskie', 'warmińsko-mazurskie', 'wielkopolskie', 'zachodniopomorskie'
+            ]),
+            'zipcode' => $this->faker->postcode(),
+        ]);
     }
 
     /* ------------------------------

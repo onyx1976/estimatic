@@ -104,6 +104,7 @@ class CompanySeeder extends Seeder
             /* Create via factory with proper status and linking to the user */
             Company::factory()
                 ->forUser($user)
+                ->withPolishData()
                 ->{$stateMethod}()
                 ->create($overrides);
 
