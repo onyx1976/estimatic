@@ -135,14 +135,27 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
-     * Check if the user has a privileged role (owner or admin).
+     * Check if the user has a given role (enum or string).
      *
      * @return bool
      * @param UserRole|string $role
      */
     public function hasRole(UserRole|string $role): bool
     {
-        return $this->role === ($role instanceof UserRole ? $role->value : strtolower($role));
+        /* Accept both enum and string; normalize strings to enum safely */
+        if ($role instanceof UserRole) {
+            return $this->role === $role;
+        }
+
+        /* Strings may come in various cases; enum values are UPPERCASE */
+        $normalized = UserRole::tryFrom(strtoupper((string) $role));
+        if ($normalized === null) {
+
+            /* Unknown role string → does not match */
+            return false;
+        }
+
+        return $this->role === $normalized;
     }
 
     /**
@@ -153,13 +166,13 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function hasAnyRole(array $roles): bool
     {
-        $userRole = strtolower($this->role->value); // enum → string
-
-        $normalizedRoles = array_map(static function (UserRole|string $role) {
-            return strtolower($role instanceof UserRole ? $role->value : (string) $role);
-        }, $roles);
-
-        return in_array($userRole, $normalizedRoles, true);
+        /* Iterate and short-circuit on first match */
+        foreach ($roles as $role) {
+            if ($this->hasRole($role)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
