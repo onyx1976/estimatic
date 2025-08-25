@@ -9,11 +9,21 @@ use App\Traits\HasPolishPhone;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 
+/**
+ * UserFactory
+ *
+ * Key features:
+ * - Generates realistic Polish-centric user data.
+ * - Uses a trait to generate valid Polish phone numbers.
+ * - Includes states for roles (owner, admin, company) and statuses (active, inactive, blocked).
+ * - Supports email verification states.
+ */
 class UserFactory extends Factory
 {
     use HasPolishPhone;
 
     protected $model = User::class;
+
 
     /**
      * Define the model's default state.
@@ -22,53 +32,44 @@ class UserFactory extends Factory
      */
     public function definition(): array
     {
-        /* Polish first names for more realistic data */
-        $maleNames = ['Jan', 'Piotr', 'Krzysztof', 'Andrzej', 'Tomasz', 'Paweł', 'Michał', 'Marcin'];
-        $femaleNames = ['Anna', 'Maria', 'Katarzyna', 'Małgorzata', 'Agnieszka', 'Barbara', 'Ewa', 'Magdalena'];
-        $firstNames = array_merge($maleNames, $femaleNames);
-
-        /* Polish last names */
-        $lastNames = ['Nowak', 'Kowalski', 'Wiśniewski', 'Dąbrowski', 'Lewandowski', 'Wójcik', 'Kamiński', 'Kowalczyk'];
-
-        $email = mb_strtolower('Tomasz'.'.'.'Nowak'.'.'.$this->faker->unique()->numberBetween(1000,
-                999999).'@example.test');
+        $dateOfBirth = $this->faker->optional(0.7)->dateTimeBetween('-70 years', '-18 years');
+        $emailVerifiedAt = $this->faker->optional(0.8)->dateTime();
+        $lastLoginAt = $this->faker->optional(0.4)->dateTime();
 
         return [
+            /* Role & Status */
+            'role' => $this->faker->randomElement(array_column(UserRole::cases(), 'value')),
+            'status' => $this->faker->randomElement(array_column(UserStatus::cases(), 'value')),
+
             /* Personal */
-            'first_name' => $this->faker->randomElement($firstNames),
-            'last_name' => $this->faker->randomElement($lastNames),
-            'date_of_birth' => $this->faker->optional()
-                ->dateTimeBetween('-70 years', '-18 years')
-                ->format('Y-m-d'),
-            'gender' => $this->faker->randomElement(['male', 'female', 'other', 'prefer_not_to_say']),
+            'first_name' => $this->faker->firstName(),
+            'last_name' => $this->faker->lastName(),
+            'date_of_birth' => $dateOfBirth?->format('Y-m-d'),
+            'gender' => $this->faker->optional()->randomElement(['male', 'female', 'other', 'prefer_not_to_say']),
 
             /* Contact & Auth */
-            'email' => $email,
-            'phone' => $this->generatePolishPhone(),
-            'email_verified_at' => $this->faker->optional(0.7)->dateTimeBetween('-30 days'),
+            'email' => $this->faker->unique()->safeEmail(),
+            'phone' => $this->faker->optional(0.6)->phoneNumber(),
+            'email_verified_at' => $emailVerifiedAt,
             'password' => Hash::make('password'),
 
             /* Profile */
             'avatar' => null,
 
-            /* Role & Status */
-            'role' => $this->faker->randomElement(UserRole::values()),
-            'status' => $this->faker->randomElement([
-                UserStatus::ACTIVE->value,
-                UserStatus::INACTIVE->value,
-                UserStatus::BLOCKED->value,
-            ]),
-
             /* Localization & Preferences */
             'language' => 'pl',
             'locale' => 'pl_PL',
             'timezone' => 'Europe/Warsaw',
-            'preferences' => ['notifications' => ['email' => true, 'sms' => false]],
+            'preferences' => $this->faker->optional() ? json_encode([
+                'theme' => $this->faker->randomElement(['light', 'dark']),
+                'notifications' => $this->faker->boolean(),
+                'email_notifications' => $this->faker->boolean(80),
+            ]) : null,
 
             /* Tracking */
-            'last_login_at' => $this->faker->optional()->dateTimeBetween('-15 days'),
-            'last_login_ip' => $this->faker->optional()->ipv4(),
-            'login_failures' => 0,
+            'last_login_at' => $lastLoginAt,
+            'last_login_ip' => $this->faker->optional(0.4)->ipv4(),
+            'login_failures' => $this->faker->numberBetween(0, 5),
 
             /* Auditing */
             'created_by' => null,
