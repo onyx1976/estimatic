@@ -30,17 +30,17 @@ class CompanyFactory extends Factory
             /* 1:1 owner – creates a matching COMPANY user if not provided */
             'user_id' => User::factory()->company()->active(),
 
+            /* Status */
+            'status' => $this->faker->randomElement(CompanyStatus::values()),
+
             /* Identity */
-            'company_name' => $companyName,
+            'company_name' => $this->faker->company(),
             'brand_name' => $this->faker->optional(0.4)->word().($brand ? ' '.$brand : ''),
 
             /* Contact */
-            'email' => $this->faker->optional()->unique()->safeEmail(),
-            'phone' => $this->faker->optional()->e164PhoneNumber(),
-            'phone_alt' => $this->faker->optional(0.2)->e164PhoneNumber(),
-
-            /* Status */
-            'status' => CompanyStatus::INCOMPLETE->value,
+            'email' => $this->faker->optional(0.8)->companyEmail(),
+            'phone' => $this->faker->optional(0.9)->phoneNumber(),
+            'phone_alt' => $this->faker->optional(0.3)->phoneNumber(),
 
             /* Legal IDs (nullable unique in DB; keep optional to avoid collisions) */
             'nip' => $this->faker->optional(0.6)->numerify('##########'),   /* 10 digits */
