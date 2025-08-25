@@ -1,5 +1,5 @@
 /*
-  * Main SCSS file for admin and company panel
+  * Main SCSS file for landing page
   * Author: OnxCode76
  */
 
@@ -25,14 +25,12 @@
 
 /* Layouts */
 @import 'layouts/header';
-//@import 'layouts/header-admin';
+//@import 'layouts/header-landing';
 @import 'layouts/footer';
 @import 'layouts/navigation';
 @import 'layouts/grid';
 
 /* Pages - only for admin panel for now */
-@import 'pages/admin/dashboard';
-//@import 'pages/admin/tables';
-//@import 'pages/admin/sidebar';
-//@import 'pages/investor/portfolio';
-//@import 'pages/investor/reports';
+//@import 'pages/landing/hero';
+//@import 'pages/landing/features';
+//@import 'pages/landing/testimonials';
