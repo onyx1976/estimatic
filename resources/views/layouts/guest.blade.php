@@ -1,30 +1,89 @@
-<!DOCTYPE html>
+@props(['title' => config('app.name'), 'metaDescription' => '', 'metaKeywords' => '', 'metaRobots' => 'index, follow'])
+
+    <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>{{ config('app.name', 'Laravel') }}</title>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
-        <!-- Fonts -->
-        <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+    <!-- CSRF Token -->
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <!-- Scripts -->
-        @vite(['resources/scss/app.scss', 'resources/js/app.js'])
-    </head>
-    <body class="font-sans text-gray-900 antialiased">
-        <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100">
-            <div>
-                <a href="/">
-                    <x-application-logo class="w-20 h-20 fill-current text-gray-500" />
-                </a>
-            </div>
+    <!-- Title Section -->
+    <title>{{ $title }} - {{ config('app.name') }}</title>
 
-            <div class="w-full sm:max-w-md mt-6 px-6 py-4 bg-white shadow-md overflow-hidden sm:rounded-lg">
-                {{ $slot }}
-            </div>
+    <!-- Author and Copyright meta tags -->
+    <meta name="author" content="{{ config('app.author', 'OnyxCode') }}"/>
+    <meta name="copyright" content="{{ config('app.consumer') }}">
+
+    <!-- Site Content SEO Meta Tags -->
+    <meta name="description" content="{{ $metaDescription }}">
+    <meta name="keywords" content="{{ $metaKeywords }}">
+    <meta name="robots" content="{{ trim($metaRobots) !== '' ? $metaRobots : 'index, follow' }}">
+
+    <!-- Search Engine Verification (if available) todo: add this config data -->
+    @if(config('app.google_verification'))
+        <meta name="google-site-verification" content="{{ config('app.google_verification') }}">
+    @endif
+
+    @if(config('app.bing_verification'))
+        <meta name="msvalidate.01" content="{{ config('app.bing_verification') }}">
+    @endif
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="{{ url()->current() }}">
+
+    <!-- Open Graph meta tags -->
+    <meta property="og:locale" content="{{ config('app.locale') }}">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="{{ config('app.name') }}">
+    <meta property="og:title" content="{{ $title }}">
+    <meta property="og:description" content="{{ $metaDescription }}">
+    <meta property="og:url" content="{{ url()->current() }}">
+
+    <!-- Twitter Card meta tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ $title }}">
+    <meta name="twitter:description" content="{{ $metaDescription }}">
+
+    <!-- Structured Data (JSON-LD) todo: add this data -->
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            "name": "{{ config('app.name') }}",
+        "url": "{{ url('/') }}"
+    }
+    </script>
+
+    <!-- Favicons -->
+    <!-- todo: add favicons -->
+    {{--    @include('partials.favicons')--}}
+
+    <!-- Fonts -->
+    {{--    @include('partials.fonts')--}}
+
+    <!-- CSS Styles -->
+    {{--    @include('partials.auth.styles')--}}
+</head>
+
+<body class="guest-body"> <!-- todo: eventually change: <body class="guest-body" x-data="{}" -->
+<main class="main-auth">
+    <div class="container-fluid g-0">
+        <div class="row min-vh-100 g-0">
+            {{ $slot }}
         </div>
-    </body>
+    </div>
+</main>
+
+<!-- JS Scripts -->
+<!-- todo: add scripts -->
+{{--@include('partials.scripts')--}}
+{{--<script>--}}
+{{--    window.translations = @json(trans('validation'));    // np. validation.required, email, max_64...--}}
+{{--    window.attributes  = @json(trans('validation.attributes'));     // np. attributes.first_name => "first name"--}}
+{{--</script>--}}
+</body>
 </html>
