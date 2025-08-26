@@ -1,5 +1,5 @@
 /*
-  * Main SCSS file for admin and company panel
+  * Main SCSS file for auth pages
   * Author: OnxCode76
  */
 
@@ -18,7 +18,7 @@
 @use 'vendors/bootstrap';
 
 /* Override admin panel variables */
-@use 'themes/admin';
+@use 'themes/auth';
 
 /* Components */
 @use 'components/buttons';

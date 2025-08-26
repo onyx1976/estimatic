@@ -1,5 +1,5 @@
 /*
-  * Main SCSS file for admin and company panel
+  * Main SCSS file for landing page
   * Author: OnxCode76
  */
 
@@ -17,8 +17,8 @@
 /* Vendors */
 @use 'vendors/bootstrap';
 
-/* Override admin panel variables */
-@use 'themes/admin';
+/* Override landing page variables and colors */
+@use 'themes/landing';
 
 /* Components */
 @use 'components/buttons';
@@ -28,14 +28,12 @@
 
 /* Layouts */
 @use 'layouts/header';
-//@use 'layouts/header-admin';
+@use 'layouts/header-landing';
 @use 'layouts/footer';
 @use 'layouts/navigation';
 @use 'layouts/grid';
 
 /* Pages - only for admin panel for now */
-@use 'pages/admin/dashboard';
-//@use 'pages/admin/tables';
-//@use 'pages/admin/sidebar';
-//@use 'pages/investor/portfolio';
-//@use 'pages/investor/reports';
+//@use 'pages/landing/hero';
+//@use 'pages/landing/features';
+//@use 'pages/landing/testimonials';
