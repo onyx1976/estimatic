@@ -59,8 +59,7 @@
     {{--    </script>--}}
 
     <!-- Favicons -->
-    <!-- todo: add favicons -->
-    {{--    @include('partials.favicons')--}}
+    @include('partials.favicons')
 
     <!-- Fonts -->
     @include('partials.fonts')

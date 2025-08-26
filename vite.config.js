@@ -1,10 +1,11 @@
-import { defineConfig } from 'vite';
+import {defineConfig} from 'vite';
 import laravel from 'laravel-vite-plugin';
+import {viteStaticCopy} from 'vite-plugin-static-copy';
 
 export default defineConfig({
-    plugins: [
-        laravel({
-            input: [
+  plugins: [
+    laravel({
+      input: [
               'resources/scss/app.scss',
               'resources/scss/auth.scss',
               'resources/scss/icons.scss',
@@ -12,7 +13,15 @@ export default defineConfig({
               'resources/scss/landing.scss',
               'resources/js/app.js'
             ],
-            refresh: true,
-        }),
-    ],
+      refresh: true,
+    }),
+    viteStaticCopy({
+      targets: [
+        {
+          src: 'resources/images',
+          dest: './../',
+        }
+      ]
+    })
+  ],
 });
