@@ -7,6 +7,7 @@ export default defineConfig({
             input: [
               'resources/scss/app.scss',
               'resources/scss/auth.scss',
+              'resources/scss/icons.scss',
               'resources/scss/landing.scss',
               'resources/js/app.js'
             ],
