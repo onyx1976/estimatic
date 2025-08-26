@@ -80,7 +80,7 @@
 
 <!-- JS Scripts -->
 <!-- todo: add scripts -->
-{{--@include('partials.scripts')--}}
+@include('partials.auth.scripts')
 {{--<script>--}}
 {{--    window.translations = @json(trans('validation'));    // np. validation.required, email, max_64...--}}
 {{--    window.attributes  = @json(trans('validation.attributes'));     // np. attributes.first_name => "first name"--}}
