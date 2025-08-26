@@ -62,7 +62,7 @@
     @include('partials.favicons')
 
     <!-- Fonts -->
-    {{--    @include('partials.fonts')--}}
+    @include('partials.fonts')
 
     <!-- CSS Styles -->
     @include('partials.auth.styles')

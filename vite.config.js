@@ -6,12 +6,13 @@ export default defineConfig({
   plugins: [
     laravel({
       input: [
-        'resources/scss/app.scss',
-        'resources/scss/auth.scss',
-        'resources/scss/icons.scss',
-        'resources/scss/landing.scss',
-        'resources/js/app.js'
-      ],
+              'resources/scss/app.scss',
+              'resources/scss/auth.scss',
+              'resources/scss/icons.scss',
+              'resources/scss/fonts.scss',
+              'resources/scss/landing.scss',
+              'resources/js/app.js'
+            ],
       refresh: true,
     }),
     viteStaticCopy({
