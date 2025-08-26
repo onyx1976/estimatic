@@ -49,14 +49,14 @@
     <meta name="twitter:description" content="{{ $metaDescription }}">
 
     <!-- Structured Data (JSON-LD) todo: add this data -->
-{{--    <script type="application/ld+json">--}}
-{{--        {--}}
-{{--            "@context": "https://schema.org",--}}
-{{--            "@type": "WebSite",--}}
-{{--            "name": "{{ config('app.name') }}",--}}
-{{--        "url": "{{ url('/') }}"--}}
-{{--    }--}}
-{{--    </script>--}}
+    {{--    <script type="application/ld+json">--}}
+    {{--        {--}}
+    {{--            "@context": "https://schema.org",--}}
+    {{--            "@type": "WebSite",--}}
+    {{--            "name": "{{ config('app.name') }}",--}}
+    {{--        "url": "{{ url('/') }}"--}}
+    {{--    }--}}
+    {{--    </script>--}}
 
     <!-- Favicons -->
     <!-- todo: add favicons -->
@@ -66,7 +66,7 @@
     {{--    @include('partials.fonts')--}}
 
     <!-- CSS Styles -->
-    {{--    @include('partials.auth.styles')--}}
+    @include('partials.auth.styles')
 </head>
 
 <body class="guest-body" x-data="{}">
