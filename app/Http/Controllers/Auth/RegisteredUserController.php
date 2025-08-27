@@ -2,49 +2,33 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
-use App\Models\User;
-use Illuminate\Auth\Events\Registered;
+use App\Http\Controllers\BaseController;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rules;
+use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 
-class RegisteredUserController extends Controller
+class RegisteredUserController extends BaseController
 {
     /**
      * Display the registration view.
      */
     public function create(): View
     {
+        /* In next steps we may pass flags (captcha, throttle) read from settings */
         return view('auth.register');
     }
 
-    /**
-     * Handle an incoming registration request.
-     *
-     * @throws \Illuminate\Validation\ValidationException
-     */
+    /* Skeleton: do not create user yet; only prove the wire-up works */
     public function store(Request $request): RedirectResponse
     {
-        $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+        /* Log a breadcrumb to verify new path is hit and BaseController DI works */
+        Log::info('register.store skeleton reached', [
+            /* Read a real setting to confirm DI from BaseController works */
+            'captcha_enabled' => $this->settings->getBool('security.captcha.enabled', true),
         ]);
 
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-        ]);
-
-        event(new Registered($user));
-
-        Auth::login($user);
-
-        return redirect(route('dashboard', absolute: false));
+        /* For now, just bounce back with a neutral status (no DB writes yet) */
+        return back()->with('status', 'register_skeleton_reached');
     }
 }
