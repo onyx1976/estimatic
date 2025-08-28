@@ -2,49 +2,65 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
-use App\Models\User;
-use Illuminate\Auth\Events\Registered;
+use App\DTO\Auth\RegisterRequestDTO;
+use App\Http\Controllers\BaseController;
+use App\Services\Auth\RegisterService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rules;
+use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 
-class RegisteredUserController extends Controller
+/**
+ * Controller for user registration
+ */
+class RegisteredUserController extends BaseController
 {
     /**
      * Display the registration view.
      */
     public function create(): View
     {
+        /* In next steps we may pass flags (captcha, throttle) read from settings */
         return view('auth.register');
     }
 
-    /**
-     * Handle an incoming registration request.
-     *
-     * @throws \Illuminate\Validation\ValidationException
-     */
-    public function store(Request $request): RedirectResponse
+    /* Skeleton: do not create user yet; only prove the wire-up works */
+    public function store(Request $request, RegisterService $registerService): RedirectResponse
     {
+        /* Minimal inline validation to keep UX predictable (Breeze-compatible) */
         $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'first_name' => ['nullable', 'string', 'max:100'],
+            'last_name' => ['nullable', 'string', 'max:100'],
+            'email' => ['required', 'string', 'email', 'max:255'],
+            'phone' => ['required', 'string', 'max:30'],
+            'password' => ['required', 'string', 'min:8'],
+            'name' => ['nullable', 'string', 'max:200'], /* Breeze fallback */
         ]);
 
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
+
+        /* Build sanitized DTO (no hashing, no DB writes at this step) */
+        $dto = RegisterRequestDTO::fromRequest($request);
+
+        /* Call service preview to enforce domain defaults and read flags */
+        $preview = $registerService->preview($dto);
+
+        /* Safe breadcrumb (no PII); Service already logged masked data */
+        Log::info('register.controller.preview', [
+            'verify_first' => $preview['meta']['verify_first'] ?? null,
+            'captcha_enabled' => $preview['meta']['captcha_enabled'] ?? null,
+            'trial_days' => $preview['meta']['trial_days'] ?? null,
+            'role' => $preview['user']['role'] ?? null,
         ]);
 
-        event(new Registered($user));
-
-        Auth::login($user);
-
-        return redirect(route('dashboard', absolute: false));
+        /* For manual testing: flash a neutral status + non-sensitive flags */
+        return back()
+            ->withInput()
+            ->with('status', 'register_preview_ok')
+            ->with('register_preview_flags', [
+                'verify_first' => $preview['meta']['verify_first'] ?? null,
+                'captcha_enabled' => $preview['meta']['captcha_enabled'] ?? null,
+                'trial_days' => $preview['meta']['trial_days'] ?? null,
+                'role' => $preview['user']['role'] ?? null,
+            ]);
     }
 }
