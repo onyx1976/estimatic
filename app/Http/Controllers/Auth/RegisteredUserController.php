@@ -5,62 +5,56 @@ namespace App\Http\Controllers\Auth;
 use App\DTO\Auth\RegisterRequestDTO;
 use App\Http\Controllers\BaseController;
 use App\Services\Auth\RegisterService;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use Illuminate\View\View;
+use Illuminate\Database\QueryException;
+use Throwable;
 
-/**
- * Controller for user registration
- */
 class RegisteredUserController extends BaseController
 {
-    /**
-     * Display the registration view.
-     */
-    public function create(): View
+    public function create()
     {
-        /* In next steps we may pass flags (captcha, throttle) read from settings */
+        /* Later we may pass settings-based flags to the view */
         return view('auth.register');
     }
 
-    /* Skeleton: do not create user yet; only prove the wire-up works */
-    public function store(Request $request, RegisterService $registerService): RedirectResponse
+    public function store(Request $request, RegisterService $registerService)
     {
-        /* Minimal inline validation to keep UX predictable (Breeze-compatible) */
+        /* Breeze-like validation; keep UX predictable */
         $request->validate([
             'first_name' => ['nullable', 'string', 'max:100'],
             'last_name' => ['nullable', 'string', 'max:100'],
-            'email' => ['required', 'string', 'email', 'max:255'],
-            'phone' => ['required', 'string', 'max:30'],
-            'password' => ['required', 'string', 'min:8'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
+//            'phone' => ['required', 'string', 'max:30'],
+            'password' => ['required', 'string', 'min:8', 'confirmed'],
             'name' => ['nullable', 'string', 'max:200'], /* Breeze fallback */
         ]);
 
-
-        /* Build sanitized DTO (no hashing, no DB writes at this step) */
+        /* Build sanitized DTO (no side effects) */
         $dto = RegisterRequestDTO::fromRequest($request);
 
-        /* Call service preview to enforce domain defaults and read flags */
-        $preview = $registerService->preview($dto);
+        try {
+            /* Create user (hash inside service). No auto-login, no mail yet. */
+            $result = $registerService->create($dto);
+        } catch (QueryException $e) {
+            /* Handle race-condition on unique email (neutral message) */
+            Log::warning('register.store unique constraint', ['code' => $e->getCode()]);
+            return back()
+                ->withInput()
+                ->withErrors(['email' => __('This email is already taken.')]);
+        } catch (Throwable $e) {
+            /* Privacy-safe log; do not leak PII to user */
+            Log::error('register.store failed', ['ex' => $e->getMessage()]);
+            return back()
+                ->withInput()
+                ->with('status', 'register_failed'); /* neutral UX */
+        }
 
-        /* Safe breadcrumb (no PII); Service already logged masked data */
-        Log::info('register.controller.preview', [
-            'verify_first' => $preview['meta']['verify_first'] ?? null,
-            'captcha_enabled' => $preview['meta']['captcha_enabled'] ?? null,
-            'trial_days' => $preview['meta']['trial_days'] ?? null,
-            'role' => $preview['user']['role'] ?? null,
-        ]);
+        /* Success: stay neutral; mail & verify flow will be added next */
+        Log::info('register.controller.user_created', ['user_id' => $result['user']->id]);
 
-        /* For manual testing: flash a neutral status + non-sensitive flags */
-        return back()
-            ->withInput()
-            ->with('status', 'register_preview_ok')
-            ->with('register_preview_flags', [
-                'verify_first' => $preview['meta']['verify_first'] ?? null,
-                'captcha_enabled' => $preview['meta']['captcha_enabled'] ?? null,
-                'trial_days' => $preview['meta']['trial_days'] ?? null,
-                'role' => $preview['user']['role'] ?? null,
-            ]);
+        return redirect()
+            ->route('register')/* back to form for now */
+            ->with('status', 'register_user_created'); /* temporary flash */
     }
 }
