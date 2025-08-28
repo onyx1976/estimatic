@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\DTO\Auth\RegisterRequestDTO;
 use App\Http\Controllers\BaseController;
+use App\Services\Auth\RegisterService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -24,45 +25,42 @@ class RegisteredUserController extends BaseController
     }
 
     /* Skeleton: do not create user yet; only prove the wire-up works */
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request, RegisterService $registerService): RedirectResponse
     {
         /* Minimal inline validation to keep UX predictable (Breeze-compatible) */
         $request->validate([
-            /* Our fields */
             'first_name' => ['nullable', 'string', 'max:100'],
             'last_name' => ['nullable', 'string', 'max:100'],
             'email' => ['required', 'string', 'email', 'max:255'],
-//            'phone' => ['required', 'string', 'max:30'],
+            'phone' => ['required', 'string', 'max:30'],
             'password' => ['required', 'string', 'min:8'],
-
-            /* Breeze fallback: allow 'name' if UI still posts it */
-            'name' => ['nullable', 'string', 'max:200'],
+            'name' => ['nullable', 'string', 'max:200'], /* Breeze fallback */
         ]);
+
 
         /* Build sanitized DTO (no hashing, no DB writes at this step) */
         $dto = RegisterRequestDTO::fromRequest($request);
 
-        /* Read a real feature flag to prove BaseController DI works */
-        $captchaEnabled = $this->settings->getBool('security.captcha.enabled', true);
+        /* Call service preview to enforce domain defaults and read flags */
+        $preview = $registerService->preview($dto);
 
-        /* Privacy-conscious logging: mask PII, never log password value */
-        $emailMasked = preg_replace('/(^.).*(@.*$)/', '$1***$2', $dto->email);
-        $phoneMasked = strlen($dto->phone) > 2
-            ? str_repeat('*', max(strlen($dto->phone) - 2, 0)).substr($dto->phone, -2)
-            : $dto->phone;
-
-        Log::info('register.store skeleton (DTO wired)', [
-            /* Do not log names to avoid PII spill */
-            'email' => $emailMasked,
-            'phone' => $phoneMasked,
-            'password_len' => strlen($dto->password), /* password length only */
-            'captcha_enabled' => $captchaEnabled,
+        /* Safe breadcrumb (no PII); Service already logged masked data */
+        Log::info('register.controller.preview', [
+            'verify_first' => $preview['meta']['verify_first'] ?? null,
+            'captcha_enabled' => $preview['meta']['captcha_enabled'] ?? null,
+            'trial_days' => $preview['meta']['trial_days'] ?? null,
+            'role' => $preview['user']['role'] ?? null,
         ]);
 
-        /* Next steps will call RegisterService + Mapper here */
-        /* For now, bounce back with status so we can verify the flow manually */
+        /* For manual testing: flash a neutral status + non-sensitive flags */
         return back()
             ->withInput()
-            ->with('status', 'register_dto_ok'); /* client-ready, no sensitive details */
+            ->with('status', 'register_preview_ok')
+            ->with('register_preview_flags', [
+                'verify_first' => $preview['meta']['verify_first'] ?? null,
+                'captcha_enabled' => $preview['meta']['captcha_enabled'] ?? null,
+                'trial_days' => $preview['meta']['trial_days'] ?? null,
+                'role' => $preview['user']['role'] ?? null,
+            ]);
     }
 }
