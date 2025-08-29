@@ -1,0 +1,49 @@
+/*
+ * Main SCSS file for auth forms
+ * Author: OnxCode76
+ */
+
+@use './../../utils/variables' as var;
+@use './../../utils/mixins' as mixins;
+
+/* Auth forms */
+.main-auth {
+
+  /* Auth left section */
+  .left-section {
+    position: relative;
+    background-image: url('@/images/backgrounds/auth-bg-1.png');
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: end;
+    align-items: center;
+    color: var.$text-light;
+  }
+
+  /* Box with transparent background */
+  .left-box {
+    position: relative;
+    z-index: 2;
+    width: 85%;
+    margin-bottom: 0;
+    padding: 1.5rem;
+    background-color: rgba(var.$secondary, .35);
+    border-radius: 0.5rem;
+    backdrop-filter: blur(6px);
+
+    @include mixins.respond-to(xl) {
+      margin-bottom: 2rem;
+    }
+
+    p, h6 {
+      color: var.$text-light;
+    }
+
+    h6 {
+      font-size: 1rem;
+      letter-spacing: 0.02em;
+    }
+  }
+}

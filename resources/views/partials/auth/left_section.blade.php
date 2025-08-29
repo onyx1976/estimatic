@@ -1,7 +1,7 @@
 <!-- Left section -->
 <div class="col-xl-7 left-section">
     <div class="bg-overlay-dark-30"></div>
-    <div class="left-box text-white text-center">
+    <div class="left-box text-center">
         <h6 class="mb-2">
             {{ trans(':name is a powerful platform designed to simplify and optimize your cost estimation workflow.', ['name' => config('app.name')]) }}
         </h6>

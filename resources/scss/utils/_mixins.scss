@@ -1,0 +1,79 @@
+/**
+ * Main SCSS file for mixins
+ * Author: OnxCode76
+ */
+
+@use './../utils/variables' as var;
+
+/* Mixins */
+
+/* Mobile First */
+@mixin respond-to($breakpoint) {
+  @if $breakpoint == xs {
+    @media (min-width: var.$breakpoint-xs) {
+      @content;
+    }
+  } @else if $breakpoint == sm {
+    @media (min-width: var.$breakpoint-sm) {
+      @content;
+    }
+  } @else if $breakpoint == md {
+    @media (min-width: var.$breakpoint-md) {
+      @content;
+    }
+  } @else if $breakpoint == lg {
+    @media (min-width: var.$breakpoint-lg) {
+      @content;
+    }
+  } @else if $breakpoint == xl {
+    @media (min-width: var.$breakpoint-xl) {
+      @content;
+    }
+  } @else if $breakpoint == xxl {
+    @media (min-width: var.$breakpoint-xxl) {
+      @content;
+    }
+  }
+}
+
+/* Desktop First */
+@mixin respond-max($breakpoint) {
+  @if $breakpoint == xs {
+    @media (max-width: var.$breakpoint-xs) {
+      @content;
+    }
+  } @else if $breakpoint == sm {
+    @media (max-width: var.$breakpoint-sm) {
+      @content;
+    }
+  } @else if $breakpoint == md {
+    @media (max-width: var.$breakpoint-md) {
+      @content;
+    }
+  } @else if $breakpoint == lg {
+    @media (max-width: var.$breakpoint-lg) {
+      @content;
+    }
+  } @else if $breakpoint == xl {
+    @media (max-width: var.$breakpoint-xl) {
+      @content;
+    }
+  } @else if $breakpoint == xxl {
+    @media (max-width: var.$breakpoint-xxl) {
+      @content;
+    }
+  }
+}
+
+/* Background Overlay */
+@mixin bg-overlay($opacity: 0.6, $color: var.$black) {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  top: 0;
+  opacity: $opacity;
+  background-color: $color;
+}

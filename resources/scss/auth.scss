@@ -17,7 +17,7 @@
 @use 'base/typography';
 @use 'base/global';
 
-/* Override admin panel variables */
+/* Override main variables */
 @use 'themes/auth';
 
 /* Components */
@@ -25,6 +25,7 @@
 @use 'components/forms';
 @use 'components/cards';
 @use 'components/modals';
+@use 'components/overlays';
 
 /* Layouts */
 @use 'layouts/header';
@@ -33,8 +34,8 @@
 @use 'layouts/navigation';
 @use 'layouts/grid';
 
-/* Pages - only for admin panel for now */
-@use 'pages/admin/dashboard';
+/* Pages - only for auth pages */
+@use 'pages/auth/auth-forms';
 //@use 'pages/admin/tables';
 //@use 'pages/admin/sidebar';
 //@use 'pages/investor/portfolio';
