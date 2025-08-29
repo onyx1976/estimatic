@@ -11,8 +11,8 @@
 
             <!-- Form header -->
             <div class="form-header">
-                <h5 class="text-custom-primary">{{ __('Create a free account') }}</h5>
-                <p class="text-custom-muted">{{ __('Unlock advanced tools for accurate and efficient project costing.') }}</p>
+                <h5 class="text-primary">{{ __('Create a free account') }}</h5>
+                <p class="text-muted">{{ __('Unlock advanced tools for accurate and efficient project costing.') }}</p>
             </div>
 
             <!-- Register form -->

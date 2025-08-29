@@ -77,3 +77,20 @@
   opacity: $opacity;
   background-color: $color;
 }
+
+/* Text styles */
+$custom-text-colors: (
+  'primary': var.$primary,
+  'secondary': var.$secondary,
+  'success': var.$success,
+  'warning': var.$warning,
+  'danger': var.$danger,
+  'white': var.$white,
+  'muted': var.$text-muted,
+);
+
+@each $name, $color in $custom-text-colors {
+  .text-#{$name} {
+    color: $color;
+  }
+}
