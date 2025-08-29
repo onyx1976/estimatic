@@ -3,7 +3,7 @@
                 metaKeywords="{{ __('cost estimation, paving estimates, construction quotes, paving business, project calculator, contractor tools') }}">
 
     <!-- Left section -->
-    {{--    @include('partials.auth.auth_left_section')--}}
+    @include('partials.auth.left_section')
 
     <!-- Right Section -->
     <div class="col-xl-5 p-sm-0 right-section">
