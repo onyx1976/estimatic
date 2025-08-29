@@ -16,7 +16,7 @@
             </div>
 
             <!-- Register form -->
-            {{--            @livewire('auth.new-user-form')--}}
+            @livewire('auth.register-form')
 
         </div>
     </div>
