@@ -3,6 +3,9 @@
   * Author: OnxCode76
  */
 
+/* Vendors */
+@use 'vendors/bootstrap';
+
 /* Utils */
 @use 'utils/variables';
 @use 'utils/mixins';
@@ -13,9 +16,6 @@
 @use 'base/reset';
 @use 'base/typography';
 @use 'base/global';
-
-/* Vendors */
-@use 'vendors/bootstrap';
 
 /* Override admin panel variables */
 @use 'themes/auth';
