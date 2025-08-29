@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\DTO\Auth\RegisterRequestDTO;
 use App\Http\Controllers\BaseController;
+use App\Http\Requests\Auth\RegisterRequest;
 use App\Services\Auth\RegisterService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -18,17 +19,8 @@ class RegisteredUserController extends BaseController
         return view('auth.register');
     }
 
-    public function store(Request $request, RegisterService $registerService)
+    public function store(RegisterRequest $request, RegisterService $registerService)
     {
-        /* Breeze-like validation; keep UX predictable */
-        $request->validate([
-            'first_name' => ['nullable', 'string', 'max:100'],
-            'last_name' => ['nullable', 'string', 'max:100'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
-//            'phone' => ['required', 'string', 'max:30'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'name' => ['nullable', 'string', 'max:200'], /* Breeze fallback */
-        ]);
 
         /* Build sanitized DTO (no side effects) */
         $dto = RegisterRequestDTO::fromRequest($request);
