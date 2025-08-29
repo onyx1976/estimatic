@@ -7,6 +7,13 @@
 @use './../../utils/mixins' as mixins;
 
 /* Auth forms */
+
+.guest-body {
+  background-color: var.$auth-bg;
+  color: var.$text-primary;
+  overflow-x: hidden;
+}
+
 .main-auth {
 
   /* Auth left section */
@@ -20,6 +27,14 @@
     justify-content: end;
     align-items: center;
     color: var.$text-light;
+
+    @include mixins.respond-max(xl) {
+      padding: 2rem;
+    }
+
+    @include mixins.respond-max(md) {
+      display: none;
+    }
   }
 
   /* Box with transparent background */
