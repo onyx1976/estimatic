@@ -70,25 +70,32 @@ class RegisterService
         $payload['password'] = Hash::make($passwordPlain);
         unset($payload['password_plain']);
 
-        /* Optional: additional normalization guards (email already lowercased in DTO) */
+        /* Normalize email just in case */
         $payload['email'] = trim(strtolower($payload['email'] ?? ''));
 
-        /* Minimal safety: never accept status/role from outside mapper */
-        unset($payload['status']); /* company completeness handled elsewhere */
+        /* Build insert; include optional fields only if present/non-empty */
+        $insert = [
+            'first_name' => $payload['first_name'] ?? null,
+            'last_name' => $payload['last_name'] ?? null,
+            'email' => $payload['email'],
+            'password' => $payload['password'] ?? null,
+            'role' => $payload['role'] ?? UserRole::COMPANY->value,
+        ];
+
+        /* Persist locale/timezone if sent (DB already has defaults) */
+        if (!empty($payload['locale'])) {
+            $insert['locale'] = $payload['locale'];
+        }
+        if (!empty($payload['timezone'])) {
+            $insert['timezone'] = $payload['timezone'];
+        }
+
+        /* Note: we do NOT set 'language' here; DB default 'pl' will be used.
+           If you want to derive it from locale later (e.g., 'pl_PL' → 'pl'), we can add it in a small follow-up. */
 
         /* Transactional create */
-        $user = DB::transaction(function () use ($payload) {
-            /* Only pass whitelisted keys that exist in User::$fillable */
-            $insert = [
-                'first_name' => $payload['first_name'] ?? null,
-                'last_name' => $payload['last_name'] ?? null,
-                'email' => $payload['email'] ?? null,
-                'phone' => $payload['phone'] ?? null,
-                'password' => $payload['password'] ?? null,
-                'role' => $payload['role'] ?? UserRole::COMPANY->value,
-                /* Any other defaults (locale/timezone) set elsewhere if needed */
-            ];
-
+        $user = DB::transaction(function () use ($insert) {
+            /* Ensure User::$fillable contains these keys to avoid MassAssignmentException */
             return User::query()->create($insert);
         });
 
@@ -96,6 +103,8 @@ class RegisterService
             'user_id' => $user->id,
             'email' => $this->maskEmail($user->email),
             'role' => $user->role,
+            'locale' => $user->locale,
+            'timezone' => $user->timezone,
         ]);
 
         return ['user' => $user];

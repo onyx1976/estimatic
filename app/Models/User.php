@@ -250,4 +250,19 @@ class User extends Authenticatable implements MustVerifyEmail
         $value = $role instanceof UserRole ? $role->value : UserRole::from($role)->value;
         return $query->where('role', $value);
     }
+
+    /**
+     * Accessors and mutators
+     */
+
+    /**
+     * Get the user's full name.
+     *
+     * @return string
+     */
+    public function getFullNameAttribute(): string
+    {
+        return trim((string)$this->first_name.' '.(string)$this->last_name);
+    }
+
 }
