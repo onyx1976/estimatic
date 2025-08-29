@@ -252,9 +252,10 @@
 
         <!-- Sign Up button -->
         <div class="mt-2 d-grid p-sm-2">
-            <button :disabled="hasFormErrors()"
-                    class="btn btn-auth waves-effect waves-light bg-gradient"
-                    type="submit">{{ __('Sign Up') }}
+            <button
+{{--                :disabled="hasFormErrors()"--}}
+                class="btn btn-auth waves-effect waves-light bg-gradient"
+                type="submit">{{ __('Sign Up') }}
             </button>
         </div>
     </form>
