@@ -1,0 +1,79 @@
+/**
+ * Main SCSS file for forms
+ * Author: OnxCode76
+ */
+
+@use './../utils/variables' as var;
+
+/* Forms */
+
+.form-group {
+  position: relative;
+  margin-bottom: 1rem;
+
+  input:focus ~ label,
+  input:not(:placeholder-shown) ~ label {
+    top: -6px;
+    font-size: 12px;
+    color: var.$text-muted;
+    background-color: var.$input-bg;
+    padding: 0 4px;
+    border-radius: 4px;
+    left: 8px;
+  }
+
+  label {
+    position: absolute;
+    left: 12px;
+    top: 8px;
+    font-size: .7rem;
+    color: var.$text-muted;
+    transition: top 0.3s ease, font-size 0.3s ease, color 0.3s ease;
+  }
+}
+
+.form-control {
+  font-size: .9rem;
+  padding: 0.6rem 0.75rem;
+  color: var.$text-muted;
+
+  &.is-password {
+    padding-right: 2.5rem;
+
+    &.is-invalid {
+      padding-right: 3.5rem;
+    }
+  }
+
+  &:focus, &:focus-visible {
+    color: var.$text-muted;
+    border-color: var.$input-border-focus;
+    outline: none;
+    box-shadow: none;
+  }
+
+  &.is-invalid, &.is-invalid:focus, &.is-invalid:focus-visible {
+    box-shadow: none;
+
+    & ~ .invalid-feedback {
+      color: var.$danger;
+      font-size: .7rem;
+    }
+  }
+}
+
+.form-check-input {
+
+  .form-check-label {
+    margin-bottom: 0;
+  }
+
+  &.is-invalid, &.is-invalid:focus, &.is-invalid:focus-visible {
+    box-shadow: none;
+
+    & ~ .invalid-feedback {
+      color: var.$danger;
+      font-size: .7rem;
+    }
+  }
+}
