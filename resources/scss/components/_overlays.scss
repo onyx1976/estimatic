@@ -1,0 +1,25 @@
+/**
+ * Main SCSS file for overlays
+ * Author: OnxCode76
+ */
+
+@use './../utils/variables' as var;
+@use './../utils/mixins' as mixins;
+
+/* Overlays */
+$overlay-colors: (
+  'dark': var.$black,
+  'light': var.$white,
+  'primary': var.$primary,
+  'secondary': var.$secondary,
+);
+
+@each $name, $color in $overlay-colors {
+  @for $i from 1 through 9 {
+    $opacity: $i * 0.1;
+
+    .bg-overlay-#{$name}-#{round($opacity * 100)} {
+      @include mixins.bg-overlay($opacity, $color);
+    }
+  }
+}

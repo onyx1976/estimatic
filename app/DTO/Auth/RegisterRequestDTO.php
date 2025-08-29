@@ -14,14 +14,17 @@ class RegisterRequestDTO
         public string $first_name,
         public string $last_name,
         public string $email,
-        public string $phone,
-        public string $password
+        public string $password,
+        public string $company_name,
+        public bool $accept_privacy,
+        public ?string $timezone = null,
+        public ?string $locale = null,
     ) {
     }
 
     /**
      * Build DTO from HTTP request with minimal normalization.
-     * We DO NOT validate here (validation stays in controller/request); just sanitize.
+     * Validation is handled by Form Request; we only sanitize and map fields.
      */
     public static function fromRequest(Request $request): self
     {
@@ -29,31 +32,38 @@ class RegisterRequestDTO
         $first = trim((string) $request->input('first_name', ''));
         $last = trim((string) $request->input('last_name', ''));
 
-        if ($first === '' && $last === '') {
-            /* Try to split Breeze 'name' into first/last by the last space */
-            $full = trim((string) $request->input('name', ''));
-            if ($full !== '') {
-                $parts = preg_split('/\s+/', $full);
-                $last = array_pop($parts) ?? '';
-                $first = trim(implode(' ', $parts));
-                if ($first === '') {
-                    $first = $last;
-                    $last = '';
-                }
-            }
-        }
-
         /* Normalize email: trim + lowercase */
         $email = strtolower(trim((string) $request->input('email', '')));
 
-        /* Normalize phone to E.164-like: keep only + and digits */
-        $rawPhone = (string) $request->input('phone', '');
-        $phone = preg_replace('/[^+\d]/', '', $rawPhone) ?? '';
-
-        /* Password as given (no hashing here) */
+        /* Password: raw (hashing happens in service) */
         $password = (string) $request->input('password', '');
 
-        return new self($first, $last, $email, $phone, $password);
+        /* Company name: trim */
+        $company = trim((string) $request->input('company_name', ''));
+
+        /* Privacy consent: cast to strict bool */
+        $acceptPrivacy = filter_var($request->boolean('accept_privacy'), FILTER_VALIDATE_BOOLEAN);
+
+        /* time_zone (request) → timezone (DTO) */
+        $timezone = $request->filled('timezone')
+            ? trim((string) $request->input('timezone'))
+            : null;
+
+        /* locale: keep as provided by hidden field (normalized on frontend) */
+        $locale = $request->filled('locale')
+            ? trim((string) $request->input('locale'))
+            : null;
+
+        return new self(
+            first_name: $first,
+            last_name: $last,
+            email: $email,
+            password: $password,
+            company_name: $company,
+            accept_privacy: $acceptPrivacy,
+            timezone: $timezone,
+            locale: $locale,
+        );
     }
 
     /** Export to array for mappers/services */
@@ -63,8 +73,11 @@ class RegisterRequestDTO
             'first_name' => $this->first_name,
             'last_name' => $this->last_name,
             'email' => $this->email,
-            'phone' => $this->phone,
             'password' => $this->password,
+            'company_name' => $this->company_name,
+            'accept_privacy' => $this->accept_privacy,
+            'timezone' => $this->timezone,
+            'locale' => $this->locale,
         ];
     }
 }

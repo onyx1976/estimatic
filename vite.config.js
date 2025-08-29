@@ -1,18 +1,19 @@
 import {defineConfig} from 'vite';
 import laravel from 'laravel-vite-plugin';
 import {viteStaticCopy} from 'vite-plugin-static-copy';
+import path from 'path'
 
 export default defineConfig({
   plugins: [
     laravel({
       input: [
-              'resources/scss/app.scss',
-              'resources/scss/auth.scss',
-              'resources/scss/icons.scss',
-              'resources/scss/fonts.scss',
-              'resources/scss/landing.scss',
-              'resources/js/app.js'
-            ],
+        'resources/scss/app.scss',
+        'resources/scss/auth.scss',
+        'resources/scss/icons.scss',
+        'resources/scss/fonts.scss',
+        'resources/scss/landing.scss',
+        'resources/js/app.js'
+      ],
       refresh: true,
     }),
     viteStaticCopy({
@@ -24,4 +25,16 @@ export default defineConfig({
       ]
     })
   ],
+  css: {
+    preprocessorOptions: {
+      scss: {
+        quietDeps: true
+      }
+    }
+  },
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, 'resources'),
+    },
+  }
 });

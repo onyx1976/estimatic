@@ -1,0 +1,104 @@
+/*
+ * Main SCSS file for auth forms
+ * Author: OnxCode76
+ */
+
+@use './../../utils/variables' as var;
+@use './../../utils/mixins' as mixins;
+
+/* Auth forms */
+
+.guest-body {
+  background-color: var.$auth-bg;
+  color: var.$text-primary;
+  overflow-x: hidden;
+}
+
+.main-auth {
+
+  /* Auth left section */
+  .left-section {
+    position: relative;
+    background-image: url('@/images/backgrounds/auth-bg-1.png');
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: end;
+    align-items: center;
+    color: var.$text-light;
+
+    @include mixins.respond-max(xl) {
+      padding: 2rem;
+    }
+
+    @include mixins.respond-max(md) {
+      display: none;
+    }
+  }
+
+  /* Box with transparent background */
+  .left-box {
+    position: relative;
+    z-index: 2;
+    width: 85%;
+    margin-bottom: 0;
+    padding: 1.5rem;
+    background-color: rgba(var.$secondary, .35);
+    border-radius: 0.5rem;
+    backdrop-filter: blur(6px);
+
+    @include mixins.respond-to(xl) {
+      margin-bottom: 2rem;
+    }
+
+    p, h6 {
+      color: var.$text-light;
+    }
+
+    h6 {
+      color: var.$white;
+      text-shadow: 1px 2px 2px var.$black;
+      font-size: 1.1rem;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+    }
+  }
+
+  /* Auth right section */
+  .right-section {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+    background-image: url('@/images/backgrounds/auth-bg-4.jpg');
+    background-size: cover;
+    background-position: center;
+    color: var.$text-primary;
+
+    &::before {
+      position: absolute;
+      content: '';
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(var.$background-dark, .1);
+      border-radius: 0.5rem;
+      backdrop-filter: blur(5px);
+      z-index: 0;
+    }
+
+    .right-wrapper {
+      width: 100%;
+      min-height: 100vh;
+      z-index: 2;
+      padding: 0;
+
+      @include mixins.respond-to(sm) {
+        padding: 1.5rem 1.5rem 0.5rem;
+      }
+    }
+  }
+}
