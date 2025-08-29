@@ -21,7 +21,10 @@ class RegisterRequest extends FormRequest
         return [
             /* Names are optional but limited to sensible length */
             'first_name' => ['bail', 'required', 'string', 'max:100', "regex:/^[\p{L}\p{M} '\-]+$/u"],
-            'last_name' => ['bail', 'required', 'string', 'max:100', "regex:/^[\p{L}\p{M} '\-]+$/u"],
+            'last_name'  => ['bail', 'required', 'string', 'max:100', "regex:/^[\p{L}\p{M} '\-]+$/u"],
+
+            /* Company name: allow common punctuation seen in EU company names */
+            'company_name' => ['bail', 'required', 'string', 'max:150', 'regex:/^[\p{L}\p{M}\p{N}\p{Zs}\.&\'"\-(),\/]+$/u'],
 
             /* Email is required, RFC-valid, unique across users (incl. soft-deleted) */
             'email' => [
@@ -29,19 +32,24 @@ class RegisterRequest extends FormRequest
                 Rule::unique('users', 'email')/*->ignore($this->userId)*/
             ],
 
-            /* Phone is required; keep it simple here—full E.164 comes at company profile step */
-            'phone' => ['bail', 'required', 'string', 'max:30'],
-
-            /* Password with confirmation; złożoność możemy rozszerzyć w kolejnym kroku */
+            /* Strong password with confirmation */
             'password' => [
                 'bail', 'required', 'string', 'confirmed',
                 Password::min(8)
                     ->max(64)
                     ->mixedCase()
                     ->numbers()
-                    ->symbols()
-                    ->uncompromised(),
+                    ->symbols(),
             ],
+
+            'password_confirmation' => ['required', 'string'],
+
+            /* Privacy consent */
+            'accept_privacy' => ['bail', 'accepted'],
+
+            /* Hidden UX fields – store to users table right away */
+            'time_zone' => ['nullable', 'string', 'max:64', 'timezone'],
+            'locale'    => ['nullable', 'string', 'max:10', 'regex:/^[a-z]{2}([-_][A-Z]{2})?$/'],
         ];
     }
 }
