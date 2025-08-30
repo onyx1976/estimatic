@@ -266,7 +266,7 @@
     <!-- Login page link -->
     <div class="text-center mt-3">
         @if (Route::has('login'))
-            <p class="text-muted">{{ __("Already have an account") }}?
+            <p class="text-muted">{{ __("Already have an account?") }}
                 <span>
                     <a href="{{ route('login') }}">{{ __('Sign In') }}.</a>
                 </span>
