@@ -4,7 +4,8 @@
         <div class="alert alert-info">{{ session('status') }}</div>
     @endif
 
-    <form method="POST" action="{{ route('register') }}"
+    <form method="POST"
+          action="{{ route('register') }}"
           x-data="{
         showPassword:false,
         tz: Intl.DateTimeFormat().resolvedOptions().timeZone ?? '',
@@ -14,7 +15,9 @@
         /* Normalize locale to ll or ll_LL */
         if (loc && !/^[a-z]{2}([_-][A-Z]{2})?$/.test(loc)) { loc = 'pl'; }
      })"
-    >
+          autocomplete="off"
+          novalidate>
+
         @csrf
 
         <!-- First and last name inputs -->
@@ -253,7 +256,7 @@
         <!-- Sign Up button -->
         <div class="mt-2 d-grid p-sm-2">
             <button
-{{--                :disabled="hasFormErrors()"--}}
+                {{--                :disabled="hasFormErrors()"--}}
                 class="btn btn-auth waves-effect waves-light bg-gradient"
                 type="submit">{{ __('Sign Up') }}
             </button>
