@@ -1,0 +1,38 @@
+/**
+ * Main SCSS file for buttons
+ * Author: OnxCode76
+ */
+
+@use './../utils/variables' as var;
+@use './../utils/mixins' as mixins;
+
+/* Buttons */
+
+.btn {
+  font-size: .85rem;
+
+  /* Auth button */
+  &.btn-auth {
+    @include mixins.button-style(
+        var.$btn-auth-text,
+        var.$btn-auth-bg,
+        var.$btn-auth-hover
+    );
+  }
+
+  &.btn-google {
+    @include mixins.button-style(
+        var.$btn-google-text,
+        var.$btn-google-bg,
+        var.$btn-google-hover
+    );
+  }
+
+  &.btn-facebook {
+    @include mixins.button-style(
+        var.$btn-facebook-text,
+        var.$btn-facebook-bg,
+        var.$btn-facebook-hover
+    );
+  }
+}

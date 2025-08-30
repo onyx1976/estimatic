@@ -68,7 +68,22 @@ $text-muted: #64748b;
 $link-color: $primary-dark;
 $link-hover-color: $primary-light;
 
+/* Border-Separators */
+$color-border: #e2e8f0;
+$color-border-dark: #334155;
+
 /* Buttons */
+$btn-auth-bg: $primary;
+$btn-auth-hover: $primary-dark;
+$btn-auth-text: $white;
+
+$btn-google-bg: $danger;
+$btn-google-hover: $danger-dark;
+$btn-google-text: $white;
+
+$btn-facebook-bg: #3b5998;
+$btn-facebook-hover: #2d4373;
+$btn-facebook-text: $white;
 
 /* Body background colors */
 $background-primary: #f8fafc;
@@ -77,3 +92,8 @@ $background-dark: #343a40;
 
 /* Auth background */
 $auth-bg: #f8fafc;
+
+/* Input colors */
+$input-bg: #e2e8f0;
+$input-border-focus: $secondary;
+

@@ -94,3 +94,17 @@ $custom-text-colors: (
     color: $color;
   }
 }
+
+/* Buttons styles */
+@mixin button-style($text-color, $bg-color, $hover-bg-color, $hover-shadow: 5px 5px 5px rgba(0, 0, 0, 0.3)) {
+  color: $text-color;
+  background-color: $bg-color;
+  box-shadow: none;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+
+  &:hover {
+    background-color: $hover-bg-color;
+    box-shadow: $hover-shadow;
+  }
+}
+

@@ -4,39 +4,23 @@
  */
 
 /* Vendors */
-@use 'vendors/bootstrap';
+@import 'vendors/manifest';
 
 /* Utils */
-@use 'utils/variables';
-@use 'utils/mixins';
-@use 'utils/functions';
-@use 'utils/helpers';
+@import 'utils/manifest';
 
 /* Base */
-@use 'base/reset';
-@use 'base/typography';
-@use 'base/global';
+@import 'base/manifest';
 
 /* Override main variables */
-@use 'themes/auth';
+@import 'themes/auth';
 
 /* Components */
-@use 'components/buttons';
-@use 'components/forms';
-@use 'components/cards';
-@use 'components/modals';
-@use 'components/overlays';
+@import 'components/manifest';
 
 /* Layouts */
-@use 'layouts/header';
-//@use 'layouts/header-admin';
-@use 'layouts/footer';
-@use 'layouts/navigation';
-@use 'layouts/grid';
+@import 'layouts/manifest';
+//@use 'layouts/header-auth';
 
 /* Pages - only for auth pages */
-@use 'pages/auth/auth-forms';
-//@use 'pages/admin/tables';
-//@use 'pages/admin/sidebar';
-//@use 'pages/investor/portfolio';
-//@use 'pages/investor/reports';
+@import 'pages/auth/manifest';
