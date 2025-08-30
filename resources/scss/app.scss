@@ -13,7 +13,7 @@
 @import 'base/manifest';
 
 /* Override admin panel variables */
-@use 'themes/admin';
+@import 'themes/admin';
 
 /* Components */
 @import 'components/manifest';
@@ -22,10 +22,5 @@
 @import 'layouts/manifest';
 //@use 'layouts/header-admin';
 
-
 /* Pages - only for admin panel for now */
-@use 'pages/admin/dashboard';
-//@use 'pages/admin/tables';
-//@use 'pages/admin/sidebar';
-//@use 'pages/investor/portfolio';
-//@use 'pages/investor/reports';
+@import 'pages/admin/manifest';

@@ -13,7 +13,7 @@
 @import 'base/manifest';
 
 /* Override main variables */
-@use 'themes/auth';
+@import 'themes/auth';
 
 /* Components */
 @import 'components/manifest';
@@ -23,8 +23,4 @@
 //@use 'layouts/header-auth';
 
 /* Pages - only for auth pages */
-@use 'pages/auth/auth-forms';
-//@use 'pages/admin/tables';
-//@use 'pages/admin/sidebar';
-//@use 'pages/investor/portfolio';
-//@use 'pages/investor/reports';
+@import 'pages/auth/manifest';

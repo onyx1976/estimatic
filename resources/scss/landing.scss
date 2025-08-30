@@ -13,7 +13,7 @@
 @import 'base/manifest';
 
 /* Override landing page variables and colors */
-@use 'themes/landing';
+@import 'themes/landing';
 
 /* Components */
 @import 'components/manifest';
