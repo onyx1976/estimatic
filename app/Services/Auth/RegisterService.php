@@ -3,6 +3,7 @@
 namespace App\Services\Auth;
 
 use App\DTO\Auth\RegisterRequestDTO;
+use App\Enums\CompanyStatus;
 use App\Mappers\Auth\RegisterMapper;
 use App\Models\Company;
 use App\Services\System\SettingsService;
@@ -82,8 +83,12 @@ class RegisterService
         ];
 
         /* Persist locale/timezone if sent (DB already has defaults) */
-        if (!empty($payload['locale']))   $insertUser['locale']   = $payload['locale'];
-        if (!empty($payload['timezone'])) $insertUser['timezone'] = $payload['timezone'];
+        if (!empty($payload['locale'])) {
+            $insertUser['locale'] = $payload['locale'];
+        }
+        if (!empty($payload['timezone'])) {
+            $insertUser['timezone'] = $payload['timezone'];
+        }
 
         /* Note: we do NOT set 'language' here; DB default 'pl' will be used.
             todo: If you want to derive it from locale later (e.g., 'pl_PL' → 'pl'), we can add it in a small follow-up. */
@@ -94,10 +99,12 @@ class RegisterService
             $user = User::query()->create($insertUser);
 
             /* 2) Create minimal company draft (company_name only) */
-            $companyData = RegisterMapper::toCompanyCreateArray($dto);
-            $company = Company::query()->create($companyData);
+            $company = new Company();
+            $company->user_id = $user->id;
+            $company->company_name = trim($dto->company_name);
+            $company->status = CompanyStatus::INCOMPLETE->value;
 
-            /* (Optional linking will be added later in profile step if needed) */
+            $company->save();
 
             return [$user, $company];
         });
