@@ -3,38 +3,26 @@
   * Author: OnxCode76
  */
 
+/* Vendors */
+@import 'vendors/manifest';
+
 /* Utils */
-@use 'utils/variables';
-@use 'utils/mixins';
-@use 'utils/functions';
-@use 'utils/helpers';
+@import 'utils/manifest';
 
 /* Base */
-@use 'base/reset';
-@use 'base/typography';
-@use 'base/global';
-
-/* Vendors */
-@use 'vendors/bootstrap';
+@import 'base/manifest';
 
 /* Override landing page variables and colors */
 @use 'themes/landing';
 
 /* Components */
-@use 'components/buttons';
-@use 'components/cards';
-@use 'components/forms';
-@use 'components/modals';
-@use 'components/overlays';
+@import 'components/manifest';
 
 /* Layouts */
-@use 'layouts/header';
-@use 'layouts/header-landing';
-@use 'layouts/footer';
-@use 'layouts/navigation';
-@use 'layouts/grid';
+@import 'layouts/manifest';
+//@use 'layouts/header-landing';
 
-/* Pages - only for admin panel for now */
+/* Pages - only for landing page for now */
 //@use 'pages/landing/hero';
 //@use 'pages/landing/features';
 //@use 'pages/landing/testimonials';

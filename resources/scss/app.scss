@@ -3,36 +3,25 @@
   * Author: OnxCode76
  */
 
+/* Vendors */
+@import 'vendors/manifest';
+
 /* Utils */
-@use 'utils/variables';
-@use 'utils/mixins';
-@use 'utils/functions';
-@use 'utils/helpers';
+@import 'utils/manifest';
 
 /* Base */
-@use 'base/reset';
-@use 'base/typography';
-@use 'base/global';
-
-/* Vendors */
-@use 'vendors/bootstrap';
+@import 'base/manifest';
 
 /* Override admin panel variables */
 @use 'themes/admin';
 
 /* Components */
-@use 'components/buttons';
-@use 'components/cards';
-@use 'components/forms';
-@use 'components/modals';
-@use 'components/overlays';
+@import 'components/manifest';
 
 /* Layouts */
-@use 'layouts/header';
+@import 'layouts/manifest';
 //@use 'layouts/header-admin';
-@use 'layouts/footer';
-@use 'layouts/navigation';
-@use 'layouts/grid';
+
 
 /* Pages - only for admin panel for now */
 @use 'pages/admin/dashboard';
