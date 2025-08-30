@@ -1,0 +1,28 @@
+/**
+ * Main SCSS file for dividers
+ * Author: OnxCode76
+ */
+
+@use './../utils/variables' as var;
+
+/* Dividers */
+
+.divider-with-text {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  color: var.$text-muted;
+
+  span {
+    text-wrap: nowrap;
+    font-size: 0.875rem;
+  }
+
+  span:first-child,
+  span:last-child {
+    flex-grow: 1;
+    border-bottom: 1px solid var.$text-muted;
+  }
+}
