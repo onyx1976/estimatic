@@ -16,24 +16,13 @@ class RegisterMapper
     public static function toUserCreateArray(RegisterRequestDTO $dto): array
     {
         /* Base payload for User */
-        $payload = [
+        return [
             'first_name' => $dto->first_name,
             'last_name' => $dto->last_name,
             'email' => $dto->email,
-            /* Password hashing will be applied in RegisterService later */
-            'password_plain' => $dto->password, /* TEMP field for service stage */
-
-            /* New fields persisted (users) */
-            'timezone' => $dto->timezone, /* may be null */
-            'locale' => $dto->locale,   /* may be null */
+            'password_plain' => $dto->password,
+            'timezone' => $dto->timezone,
+            'locale' => $dto->locale,
         ];
-
-        /* Company data will be used when creating a Company draft (next steps) */
-        $payload['company_name'] = $dto->company_name;
-
-        /* Privacy consent can be recorded later in audit/consents table if needed */
-        $payload['accept_privacy'] = $dto->accept_privacy;
-
-        return $payload;
     }
 }
