@@ -21,7 +21,7 @@ class RegisterMapper
             'last_name' => $dto->last_name,
             'email' => $dto->email,
             /* Password hashing will be applied in RegisterService later */
-            'password_plain' => $dto->password, /* TEMP field for service stage */
+            'password_plain' => $dto->password,
 
             /* New fields persisted (users) */
             'timezone' => $dto->timezone, /* may be null */
@@ -35,5 +35,18 @@ class RegisterMapper
         $payload['accept_privacy'] = $dto->accept_privacy;
 
         return $payload;
+    }
+
+    /**
+     * Minimal payload to create Company draft at signup.
+     * We only set company_name now; the full profile will be completed later.
+     */
+    public static function toCompanyCreateArray(RegisterRequestDTO $dto): array
+    {
+        /* Trim + cap defensively; FormRequest already validated size/regex */
+        $name = trim($dto->company_name);
+        return [
+            'company_name' => mb_substr($name, 0, 200),
+        ];
     }
 }

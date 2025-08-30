@@ -24,7 +24,7 @@
         <div class="row">
 
             <!-- First name input -->
-            <div class="col-xl-12">
+            <div class="col-xl-6">
                 <div class="form-group">
                     <input
                         class="form-control {{ $errors->has('first_name') ? 'is-invalid' : '' }}"
@@ -55,7 +55,7 @@
             </div>
 
             <!-- Last name input -->
-            <div class="col-xl-12">
+            <div class="col-xl-6">
                 <div class="form-group">
                     <input class="form-control {{ $errors->has('last_name') ? 'is-invalid' : '' }}"
                            {{--                           :class="errors.last_name ? 'is-invalid' : ''"--}}
@@ -82,6 +82,36 @@
                     <span class="invalid-feedback font-size-12" role="alert">{{ $message }}</span>
                     @enderror
 
+                </div>
+            </div>
+
+            <!-- Company name input -->
+            <div class="col-xl-12">
+                <div class="form-group">
+                    <input class="form-control {{ $errors->has('company_name') ? 'is-invalid' : '' }}"
+                           {{--                           :class="errors.company_name ? 'is-invalid' : ''"--}}
+                           {{--                           x-model="company_name"--}}
+                           {{--                           x-init="company_name = '{{ old('company_name', '') }}'"--}}
+                           {{--                           @input="onInput('company_name')"--}}
+                           id="company_name"
+                           type="text"
+                           name="company_name"
+                           placeholder=""
+                           autocomplete="off"
+                           required="">
+
+                    <label for="company_name"
+                           class="form-label">{{ __('Company name') }}
+                    </label>
+
+                    <!-- Show company_name errors -->
+                    {{--                    <span x-show="errors.company_name"--}}
+                    {{--                          x-text="errors.company_name"--}}
+                    {{--                          class="invalid-feedback font-size-12">--}}
+                    {{--                </span>--}}
+                    @error('company_name')
+                    <span class="invalid-feedback font-size-12" role="alert">{{ $message }}</span>
+                    @enderror
                 </div>
             </div>
 
