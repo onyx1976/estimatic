@@ -284,10 +284,10 @@
     <!-- todo: add social login functionality in the future -->
     <!-- Social login buttons -->
     <div class="social-login">
-        <a href="#" class="btn btn-sm btn-google"><i class="bi bi-google me-2"></i>{{ __('Login with') }}
+        <a href="#" class="btn btn-sm btn-google"><i class="bi bi-google me-2 align-middle"></i>{{ __('Login with') }}
             Google
         </a>
-        <a href="#" class="btn btn-sm btn-facebook"><i class="bi bi-facebook me-2"></i>{{ __('Login with') }}
+        <a href="#" class="btn btn-sm btn-facebook"><i class="bi bi-facebook me-2 align-middle"></i>{{ __('Login with') }}
             Facebook
         </a>
     </div>

@@ -102,3 +102,30 @@
     }
   }
 }
+
+.social-login {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  @include mixins.respond-to(sm) {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+
+  @include mixins.respond-to(sm) {
+    justify-content: center;
+  }
+
+  a {
+    margin-bottom: 1rem;
+
+    @include mixins.respond-to(sm) {
+      margin-left: 1rem;
+      margin-right: 1rem;
+    }
+  }
+}
