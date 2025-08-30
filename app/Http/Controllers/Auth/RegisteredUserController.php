@@ -7,18 +7,17 @@ use App\Events\CompanyProfileCreated;
 use App\Http\Controllers\BaseController;
 use App\Http\Requests\Auth\RegisterRequest;
 use App\Services\Auth\RegisterService;
-use Illuminate\Auth\AuthenticationException;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Database\QueryException;
+use Illuminate\Auth\AuthenticationException;
 use Throwable;
 
 class RegisteredUserController extends BaseController
 {
     public function create()
     {
-        /* todo: Later we may pass settings-based flags to the view */
         return view('auth.register');
     }
 
@@ -27,48 +26,65 @@ class RegisteredUserController extends BaseController
      */
     public function store(RegisterRequest $request, RegisterService $registerService): RedirectResponse
     {
-
-        /* Build sanitized DTO (no side effects) */
         $dto = RegisterRequestDTO::fromRequest($request);
 
         try {
-
-            /* Create user via service (hash inside) */
             $result = $registerService->create($dto);
-            $user = $result['user'];
-
+            $user   = $result['user'];
         } catch (QueryException $e) {
+            /* Log full SQLSTATE + driver code to diagnose real cause (company insert etc.) */
+            Log::warning('register.store query_exception', [
+                'sqlstate'    => $e->errorInfo[0] ?? null,
+                'driver_code' => $e->errorInfo[1] ?? null,
+                'message'     => $e->getMessage(),
+            ]);
 
-            /* Handle race-condition on unique email (neutral message) */
-            Log::warning('register.store unique constraint', ['code' => $e->getCode()]);
-            return back()
-                ->withInput()
-                ->withErrors(['email' => __('This email is already taken.')]);
+            /* Only show "email taken" if it's truly a unique(users.email) violation */
+            if ($this->isUniqueEmailViolation($e)) {
+                return back()->withInput()
+                    ->withErrors(['email' => __('This email is already taken.')]);
+            }
+
+            return back()->withInput()
+                ->with('status', 'register_failed'); /* neutral message for other DB errors */
         } catch (Throwable $e) {
-
-            /* Privacy-safe log; do not leak PII to user */
             Log::error('register.store failed', ['ex' => $e->getMessage()]);
-            return back()
-                ->withInput()
-                ->with('status', 'register_failed');
+            return back()->withInput()->with('status', 'register_failed');
         }
 
-        /* Immediate login (your chosen flow) */
         try {
             Auth::login($user);
         } catch (Throwable $e) {
-            /* Extremely rare; keep user created but show neutral message */
             Log::error('register.auth.login_failed', ['user_id' => $user->id, 'ex' => $e->getMessage()]);
             throw new AuthenticationException('Login failed after registration.');
         }
 
-        /* Success: stay neutral; mail & verify flow will be added next */
-        Log::info('register.controller.user_created', ['user_id' => $result['user']->id]);
-
-        /* Fire onboarding event – listeners will create Company draft/profile */
+        Log::info('register.controller.user_created', ['user_id' => $user->id]);
         event(new CompanyProfileCreated($user));
 
-        /* Redirect to onboarding */
         return redirect()->route('verification.notice');
+    }
+
+    /* ----------------------- helpers ----------------------- */
+
+    /* Detect a true unique constraint on users.email (MySQL/Postgres) */
+    private function isUniqueEmailViolation(QueryException $e): bool
+    {
+        $sqlState   = $e->errorInfo[0] ?? null;      // e.g. '23000' (SQLSTATE class integrity constraint)
+        $driverCode = (int)($e->errorInfo[1] ?? 0);  // MySQL 1062 duplicate key
+        $msg        = $e->getMessage();
+
+        /* MySQL/MariaDB duplicate key */
+        if ($sqlState === '23000' && $driverCode === 1062 && str_contains($msg, 'users') && str_contains($msg, 'email')) {
+            return true;
+        }
+
+        /* PostgreSQL unique_violation */
+        if ($sqlState === '23505' && (str_contains($msg, 'users_email_unique') || (str_contains($msg, 'users') && str_contains($msg, 'email')))) {
+            return true;
+        }
+
+        /* Fallback heuristic */
+        return str_contains($msg, 'unique') && str_contains($msg, 'users') && str_contains($msg, 'email');
     }
 }

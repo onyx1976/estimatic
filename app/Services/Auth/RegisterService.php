@@ -4,6 +4,7 @@ namespace App\Services\Auth;
 
 use App\DTO\Auth\RegisterRequestDTO;
 use App\Mappers\Auth\RegisterMapper;
+use App\Models\Company;
 use App\Services\System\SettingsService;
 use App\Enums\UserRole;
 use Illuminate\Support\Facades\DB;
@@ -36,7 +37,6 @@ class RegisterService
 
         Log::info('register.service.preview', [
             'email' => $this->maskEmail($user['email'] ?? ''),
-            'phone' => $this->maskPhone($user['phone'] ?? ''),
             'password_len' => isset($user['password_plain']) ? strlen((string) $user['password_plain']) : 0,
             'role' => $user['role'] ?? null,
             'verify_first' => $meta['verify_first'],
@@ -47,13 +47,14 @@ class RegisterService
     }
 
     /**
-     * Create a new User record from DTO.
-     * - Hashes password
-     * - Enforces role=COMPANY (ignores any incoming role)
-     * - Runs in DB transaction
-     * - NO mail sending here (next step)
+     * Create a new User and minimal Company draft from DTO.
+     * * - Hashes password
+     * * - Enforces role=COMPANY
+     * * - Persists locale/timezone if provided
+     * * - Creates Company with company_name only (profile completed later)
+     * * - One DB transaction
      *
-     * @return array{user: User}
+     * @return array{user: User, company: Company}
      * @param RegisterRequestDTO $dto
      * @throws Throwable
      */
@@ -61,8 +62,6 @@ class RegisterService
     {
         /* Map DTO → array (contains password_plain for now) */
         $payload = RegisterMapper::toUserCreateArray($dto);
-
-        /* Enforce domain defaults */
         $payload['role'] = UserRole::COMPANY->value;
 
         /* Hash password and drop the plain value ASAP */
@@ -74,7 +73,7 @@ class RegisterService
         $payload['email'] = trim(strtolower($payload['email'] ?? ''));
 
         /* Build insert; include optional fields only if present/non-empty */
-        $insert = [
+        $insertUser = [
             'first_name' => $payload['first_name'] ?? null,
             'last_name' => $payload['last_name'] ?? null,
             'email' => $payload['email'],
@@ -83,20 +82,24 @@ class RegisterService
         ];
 
         /* Persist locale/timezone if sent (DB already has defaults) */
-        if (!empty($payload['locale'])) {
-            $insert['locale'] = $payload['locale'];
-        }
-        if (!empty($payload['timezone'])) {
-            $insert['timezone'] = $payload['timezone'];
-        }
+        if (!empty($payload['locale']))   $insertUser['locale']   = $payload['locale'];
+        if (!empty($payload['timezone'])) $insertUser['timezone'] = $payload['timezone'];
 
         /* Note: we do NOT set 'language' here; DB default 'pl' will be used.
-           If you want to derive it from locale later (e.g., 'pl_PL' → 'pl'), we can add it in a small follow-up. */
+            todo: If you want to derive it from locale later (e.g., 'pl_PL' → 'pl'), we can add it in a small follow-up. */
 
         /* Transactional create */
-        $user = DB::transaction(function () use ($insert) {
-            /* Ensure User::$fillable contains these keys to avoid MassAssignmentException */
-            return User::query()->create($insert);
+        [$user, $company] = DB::transaction(function () use ($insertUser, $dto) {
+            /* 1) Create user */
+            $user = User::query()->create($insertUser);
+
+            /* 2) Create minimal company draft (company_name only) */
+            $companyData = RegisterMapper::toCompanyCreateArray($dto);
+            $company = Company::query()->create($companyData);
+
+            /* (Optional linking will be added later in profile step if needed) */
+
+            return [$user, $company];
         });
 
         Log::info('register.service.created_user', [
@@ -105,26 +108,17 @@ class RegisterService
             'role' => $user->role,
             'locale' => $user->locale,
             'timezone' => $user->timezone,
+            'company_id' => $company?->id,
         ]);
 
         return ['user' => $user];
     }
 
-    /* ----------------------- helpers ----------------------- */
+    /* ----------------------- Helpers ----------------------- */
 
     /** @internal mask email to first char + domain */
     protected function maskEmail(string $email): string
     {
         return (string) preg_replace('/(^.).*(@.*$)/', '$1***$2', $email);
-    }
-
-    /** @internal keep only last 2 digits */
-    protected function maskPhone(string $phone): string
-    {
-        $len = strlen($phone);
-        if ($len <= 2) {
-            return $phone;
-        }
-        return str_repeat('*', $len - 2).substr($phone, -2);
     }
 }
