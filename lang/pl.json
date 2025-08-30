@@ -1,9 +1,23 @@
 {
     ":name is a powerful platform designed to simplify and optimize your cost estimation workflow.": ":name to zaawansowana platforma zaprojektowana z myślą o uproszczeniu i optymalizacji procesu tworzenia kosztorysów.",
+    "Already have an account?": "Masz już konto?",
+    "Company name": "Nazwa firmy",
+    "Confirm password": "Potwierdź hasło",
     "Create an account to start estimating projects and managing your paving business efficiently.": "Utwórz konto, aby rozpocząć kosztorysowanie projektów i efektywne zarządzanie swoją firmą brukarską.",
     "Create a free account": "Zarejestruj się za darmo",
+    "Email": "E-mail",
+    "First name": "Imię",
+    "I accept the :terms and :privacy.": "Akceptuję warunki :terms i zapoznałem się z :privacy.",
+    "Last name": "Nazwisko",
     "Log in using the credentials provided during account registration to access your personalized dashboard.": "Zaloguj się, korzystając z danych dostępowych otrzymanych podczas rejestracji konta, aby uzyskać dostęp do swojego spersonalizowanego panelu.",
+    "Login with": "Zaloguj się z",
+    "or continue with": "lub kontynuuj z",
+    "Password": "Hasło",
+    "Privacy Policy": "Polityka prywatności",
     "Register your business account": "Zarejestruj swoje konto biznesowe",
+    "Sign In": "Zaloguj się",
+    "Sign Up": "Zarejestruj się",
+    "Terms of Use": "Regulamin",
     "Unlock advanced tools for accurate and efficient project costing.": "Odblokuj zaawansowane narzędzia do dokładnego i efektywnego kosztorysowania projektów.",
     "With advanced security, efficient customer management, and a user-friendly interface, :name helps your business work smarter.": "Dzięki nowoczesnym funkcjom bezpieczeństwa, efektywnemu zarządzaniu klientami oraz intuicyjnemu interfejsowi, :name wspiera Twój biznes w codziennej pracy."
 }
