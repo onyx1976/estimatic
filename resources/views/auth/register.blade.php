@@ -6,7 +6,7 @@
     @include('partials.auth.left_section')
 
     <!-- Right Section -->
-    <div class="col-xl-5 p-sm-0 right-section">
+    <div class="col-xl-4 p-sm-0 right-section">
         <div class="right-wrapper">
 
             <!-- Form header -->

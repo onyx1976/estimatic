@@ -1,5 +1,5 @@
 <!-- Left section -->
-<div class="col-xl-7 left-section">
+<div class="col-xl-8 left-section">
     <div class="bg-overlay-dark-30"></div>
     <div class="left-box text-center">
         <h6 class="mb-2">
